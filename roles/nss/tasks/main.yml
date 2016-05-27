@@ -1,0 +1,17 @@
+---
+- name: Check yum exclusion
+  shell: 'egrep -i "^[[:space:]]*exclude" /etc/yum.conf'
+  register: yum_exclude
+  ignore_errors: True
+
+- name: Exclude nss from updates
+  lineinfile: dest=/etc/yum.conf
+              regexp='(?i)(^\s*exclude\s*=(\s*(?!nss)[\w=\-\*]+)*)\s*$'
+              line='\1 nss*'
+              backrefs=yes
+              backup=yes
+
+- name: Add Exclude line if doesn't exist
+  lineinfile: dest=/etc/yum.conf
+              line='Exclude=nss*'
+  when: yum_exclude|failed
