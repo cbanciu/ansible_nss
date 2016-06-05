@@ -1,6 +1,6 @@
 ---
 - name: NSS
-  hosts: 
-
+  hosts: all
+  remote_user: root
   roles:
     - nss

@@ -1,9 +1,9 @@
 ---
 - name: Check if affected
-  command: '/usr/bin/curl https://google.com'
+  command: '/usr/bin/curl --connect-timeout 60 -I https://google.com'
   register: nss_affected
   ignore_errors: True
 
 - name: Downgrade NSS
   include: downgrade.yml
-  when: nss_affected.rc != 0
+  when: nss_affected.rc == -4 and nss_affected.stderr == ""
